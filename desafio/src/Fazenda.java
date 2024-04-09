@@ -54,8 +54,8 @@ public class Fazenda {
         for (Animal animal : plantel.values()) {
             if (animal.getTipo().equals(tipo) && animal.getStatus().equals("Ativo")) {
                 encontrado = true;
-                System.out.println(animal.getId() + ": Altura " + animal.getAltura() + ", Comprimento " +
-                        animal.getComprimento() + ", Largura " + animal.getLargura() + ", Peso " + animal.getPeso());
+                System.out.println(animal.getId() + ": Altura: " + animal.getAltura() + " cm, Comprimento: " +
+                        animal.getComprimento() + " cm, Largura: " + animal.getLargura() + " cm, Peso: " + animal.getPeso()+" kg.");
             }
         }        
         if (!encontrado) {
@@ -74,7 +74,7 @@ public class Fazenda {
                 String id = entry.getKey();
                 double valor = entry.getValue();
                 Animal animal = plantel.get(id);
-                System.out.println("Animal " + id + ", Tipo " + animal.getTipo() + ", Valor da Venda: " + valor + ", Data da venda: " +animal.getDataVenda());
+                System.out.println("Animal " + id + ", Tipo " + animal.getTipo() + ", Valor da Venda: " + valor + " reais, Data da venda: " +animal.getDataVenda());
                 totalVendas += valor;
             }
         System.out.println("Total de Vendas: " + totalVendas);
@@ -94,7 +94,7 @@ public class Fazenda {
             String id = entry.getKey();
             Animal animal = plantel.get(id);
             String tipo = animal.getTipo();
-            System.out.println("Animal " + id + ", Tipo " + tipo + ", Peso " + entry.getValue()+", data da perda: " + animal.getDataPerda());
+            System.out.println("Animal " + id + ", Tipo " + tipo + ", Peso " + entry.getValue()+" kg, Data da perda: " + animal.getDataPerda());
             contagemPerdasPorTipo.put(tipo, contagemPerdasPorTipo.getOrDefault(tipo, 0) + 1);
         }
         System.out.println("Contagem de Perdas por Tipo:");

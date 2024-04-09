@@ -87,10 +87,10 @@ public class Main {
         if (animal != null) {
             System.out.println("\nInformações do Animal:");
             System.out.println("ID: " + animal.getId());
-            System.out.println("Altura: " + animal.getAltura()+"cm.");
-            System.out.println("Comprimento: " + animal.getComprimento()+ "cm.");
-            System.out.println("Largura: " + animal.getLargura()+"cm.");
-            System.out.println("Peso: " + animal.getPeso()+"cm.");
+            System.out.println("Altura: " + animal.getAltura()+" cm.");
+            System.out.println("Comprimento: " + animal.getComprimento()+ " cm.");
+            System.out.println("Largura: " + animal.getLargura()+" cm.");
+            System.out.println("Peso: " + animal.getPeso()+" kg.");
             System.out.println("Tipo: " + animal.getTipo());
             System.out.println("Status: " + animal.getStatus());
         } else {
