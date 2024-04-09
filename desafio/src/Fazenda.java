@@ -22,8 +22,7 @@ public class Fazenda {
 
     public void avaliarAnimal(String id, double altura, double comprimento, double largura, double peso) {
         Animal animal = plantel.get(id);
-        if (altura >= animal.getAltura() && comprimento >= animal.getComprimento() &&
-                largura >= animal.getLargura() && peso >= animal.getPeso()) {
+        if (altura >= animal.getAltura() && comprimento >= animal.getComprimento() && largura >= animal.getLargura() && peso >= animal.getPeso()) {
             animal.setAltura(altura);
             animal.setComprimento(comprimento);
             animal.setLargura(largura);
