@@ -37,7 +37,6 @@ public class Fazenda {
         animal.setStatus("Vendido");
         animal.setDataVenda(data);
         vendas.put(id, valor);
-
     }
 
     public void registrarPerda(String id, String perda) {
@@ -45,7 +44,6 @@ public class Fazenda {
         animal.setStatus("Perdido");
         animal.setDataPerda(perda);
         perdas.put(id, animal.getPeso()); 
-
     }
 
     public void relatorioAnimaisPorTipo(String tipo) {
