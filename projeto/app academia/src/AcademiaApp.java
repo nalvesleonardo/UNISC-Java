@@ -28,52 +28,58 @@ public class AcademiaApp {
 
         professores = new Professor[]{professor1, professor2};
 
-        realizarLogin(); // Chama a função de login
+        while (true) {
+            realizarLogin(); // Chama a função de login
 
-        int opcao;
-        do {
-            mostrarMenu(); // Menu de opções principal
-            opcao = lerOpcao();
+            int opcao;
+            do {
+                mostrarMenu(); // Menu de opções principal
+                opcao = lerOpcao();
 
-            switch (opcao) {
-                case 1:
-                    verificarMensalidade();
-                    break;
-                case 2:
-                    escolherProfessor();
-                    break;
-                case 3:
-                    solicitarTreinoAleatorio();
-                    break;
-                case 4:
-                    atualizarPerfil();
-                    break;
-                case 5:
-                    visualizarHistoricoDeTreinos();
-                    break;
-                case 6:
-                    enviarFeedback();
-                    break;
-                case 7:
-                    System.out.println("Saindo...");
-                    break;
-                default:
-                    System.out.println("Opção inválida. Tente novamente.");
-            }
-        } while (opcao != 7);
+                switch (opcao) {
+                    case 1:
+                        verificarMensalidade();
+                        break;
+                    case 2:
+                        escolherProfessor();
+                        break;
+                    case 3:
+                        solicitarTreinoAleatorio();
+                        break;
+                    case 4:
+                        atualizarPerfil();
+                        break;
+                    case 5:
+                        visualizarHistoricoDeTreinos();
+                        break;
+                    case 6:
+                        enviarFeedback();
+                        break;
+                    case 7:
+                        System.out.println("Deslogando...\n\n");
+                        usuarioLogado = null;
+                        break;
+                    case 8:
+                        System.out.println("Saindo...");
+                        return;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente.");
+                }
+            } while (opcao != 7 && opcao != 8);
+        }
     }
 
     private static void realizarLogin() {
-        System.out.println("1. Login");
-        System.out.println("2. Cadastro");
-        System.out.print("Escolha uma opção: ");
-        int opcao = lerOpcao();
-        limparBufferScanner();
+        while (usuarioLogado == null) {
+            System.out.println("1. Login");
+            System.out.println("2. Cadastro");
+            System.out.print("Escolha uma opção: ");
+            int opcao = lerOpcao();
+            limparBufferScanner();
 
-        if (opcao == 2) {
-            cadastrarNovoUsuario();
-        } else {
-            while (usuarioLogado == null) {
+            if (opcao == 2) {
+                cadastrarNovoUsuario();
+            } else {
                 System.out.print("Digite seu nome de usuário: ");
                 String nome = scanner.nextLine();
                 System.out.print("Digite sua senha: ");
@@ -134,7 +140,7 @@ public class AcademiaApp {
 
             try {
                 bancoDeDados.adicionarUsuario(novoUsuario);
-                System.out.println("Cadastro realizado com sucesso! Faça o login para continuar.");
+                System.out.println("Cadastro realizado com sucesso! Faça o login para continuar.\n");
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -147,7 +153,7 @@ public class AcademiaApp {
     }
 
     private static boolean isTelefoneValid(String telefone) {
-        return telefone.matches("\\d{10,11}"); // número de telefone com 10 ou 11 dígitos
+        return telefone.matches("\\d{10,11}"); // Supondo um número de telefone com 10 ou 11 dígitos
     }
 
     private static void mostrarMenu() {
@@ -158,7 +164,8 @@ public class AcademiaApp {
         System.out.println("4. Atualizar perfil");
         System.out.println("5. Visualizar histórico de treinos");
         System.out.println("6. Enviar feedback");
-        System.out.println("7. Sair");
+        System.out.println("7. Deslogar");
+        System.out.println("8. Sair");
         System.out.print("Escolha uma opção: ");
     }
 
@@ -188,7 +195,6 @@ public class AcademiaApp {
         System.out.print("Digite a data da aula (dd/MM/yyyy): ");
         limparBufferScanner();
         String data = scanner.nextLine();
-        data = data.replaceAll(" ","/");
 
         System.out.println("Professores disponíveis:");
         for (int i = 0; i < professores.length; i++) {
@@ -201,7 +207,7 @@ public class AcademiaApp {
             Professor professorEscolhido = professores[escolha - 1];
             Treino treinoAleatorio = professorEscolhido.fornecerTreinoAleatorio();
             System.out.println("Treino fornecido por " + professorEscolhido.getNome() + ": " + treinoAleatorio.getDescricao());
-            System.out.println("Aula agendada para " + data + " com o professor " + professorEscolhido.getNome() + " sucesso!");
+            System.out.println("Aula agendada para " + data + " com o professor " + professorEscolhido.getNome() + " sucesso!\n");
         } else {
             System.out.println("Escolha inválida.");
         }
