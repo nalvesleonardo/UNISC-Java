@@ -1,7 +1,0 @@
-public enum Cargo {
-    GERENTE,
-    ANALISTA,
-    DESENVOLVEDOR,
-    ANALISTA_DE_SISTEMAS,
-    ESTAGIARIO
-}
