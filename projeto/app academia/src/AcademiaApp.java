@@ -1,11 +1,11 @@
-import java.util.Scanner;
 import java.util.Random;
+import java.util.Scanner;
 
 public class AcademiaApp {
     private static BancoDeDadosSimulado bancoDeDados = new BancoDeDadosSimulado();
     private static Usuario usuarioLogado = null;
     private static Scanner scanner = new Scanner(System.in);
-    private static Object[] Professor;
+    private static Professor[] professores;
 
     public static void main(String[] args) {
         try {
@@ -20,11 +20,19 @@ public class AcademiaApp {
     private static void iniciar() {
         System.out.println("Bem-vindo ao sistema da academia!");
 
-        realizarLogin(); //chama a função de login
+        // Inicializar professores e treinos
+        Treino[] treinos1 = {new Treino("Treino A"), new Treino("Treino B")};
+        Treino[] treinos2 = {new Treino("Treino C"), new Treino("Treino D")};
+        Professor professor1 = new Professor("Eduardo", treinos1);
+        Professor professor2 = new Professor("Camila", treinos2);
+
+        professores = new Professor[]{professor1, professor2};
+
+        realizarLogin(); // Chama a função de login
 
         int opcao;
         do {
-            mostrarMenu(); //menu de opções principal
+            mostrarMenu(); // Menu de opções principal
             opcao = lerOpcao();
 
             switch (opcao) {
@@ -32,7 +40,7 @@ public class AcademiaApp {
                     verificarMensalidade();
                     break;
                 case 2:
-                    EscolherumProfessor();
+                    escolherProfessor();
                     break;
                 case 3:
                     solicitarTreinoAleatorio();
@@ -41,15 +49,12 @@ public class AcademiaApp {
                     atualizarPerfil();
                     break;
                 case 5:
-                    agendarAula();
-                    break;
-                case 6:
                     visualizarHistoricoDeTreinos();
                     break;
-                case 7:
+                case 6:
                     enviarFeedback();
                     break;
-                case 8:
+                case 7:
                     System.out.println("Saindo...");
                     break;
                 default:
@@ -58,12 +63,12 @@ public class AcademiaApp {
         } while (opcao != 7);
     }
 
-    private static void realizarLogin() { //metodo de login ou cadastro
+    private static void realizarLogin() {
         System.out.println("1. Login");
         System.out.println("2. Cadastro");
         System.out.print("Escolha uma opção: ");
         int opcao = lerOpcao();
-        scanner.nextLine(); // Limpa o buffer do scanner
+        limparBufferScanner();
 
         if (opcao == 2) {
             cadastrarNovoUsuario();
@@ -85,35 +90,79 @@ public class AcademiaApp {
         }
     }
 
-    private static void cadastrarNovoUsuario() { 
-        System.out.print("Digite seu nome de usuário: ");
-        String nome = scanner.nextLine();
-        System.out.print("Digite sua senha: ");
-        String senha = scanner.nextLine();
+    private static void cadastrarNovoUsuario() {
+        String nome;
+        String email;
+        String telefone;
+        String senha;
+        String confirmacaoSenha;
 
-        Usuario novoUsuario = new Usuario(nome, senha, false); 
-        try {
-            bancoDeDados.adicionarUsuario(novoUsuario);
-            System.out.println("Cadastro realizado com sucesso! Faça o login para continuar.");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        do {
+            System.out.print("Digite seu nome de usuário: ");
+            nome = scanner.nextLine();
+            System.out.print("Digite seu email: ");
+            email = scanner.nextLine();
+            System.out.print("Digite seu telefone: ");
+            telefone = scanner.nextLine();
+
+            if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty()) {
+                System.out.println("Todos os campos são obrigatórios. Tente novamente.");
+                continue;
+            }
+
+            if (!isEmailValid(email)) {
+                System.out.println("Email inválido. Tente novamente.");
+                continue;
+            }
+
+            if (!isTelefoneValid(telefone)) {
+                System.out.println("Telefone inválido. Tente novamente.");
+                continue;
+            }
+
+            System.out.print("Digite sua senha: ");
+            senha = scanner.nextLine();
+            System.out.print("Confirme sua senha: ");
+            confirmacaoSenha = scanner.nextLine();
+
+            if (!senha.equals(confirmacaoSenha)) {
+                System.out.println("As senhas não coincidem. Tente novamente.");
+                continue;
+            }
+
+            Usuario novoUsuario = new Usuario(nome, senha, email, telefone, false);
+
+            try {
+                bancoDeDados.adicionarUsuario(novoUsuario);
+                System.out.println("Cadastro realizado com sucesso! Faça o login para continuar.");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        } while (true);
+    }
+
+    private static boolean isEmailValid(String email) {
+        return email.contains("@");
+    }
+
+    private static boolean isTelefoneValid(String telefone) {
+        return telefone.matches("\\d{10,11}"); // número de telefone com 10 ou 11 dígitos
     }
 
     private static void mostrarMenu() {
         System.out.println("\nMenu:");
         System.out.println("1. Verificar estado da mensalidade");
-        System.out.println("2. Escolher um Professor");
-        System.out.println("3. Solicitar treino aleatório");
+        System.out.println("2. Agendar treino particular com professor");
+        System.out.println("3. Solicitar treino rápido aleatório");
         System.out.println("4. Atualizar perfil");
-        System.out.println("5. Agendar aula");
-        System.out.println("6. Visualizar histórico de treinos");
-        System.out.println("7. Enviar feedback");
-        System.out.println("8. Sair");
+        System.out.println("5. Visualizar histórico de treinos");
+        System.out.println("6. Enviar feedback");
+        System.out.println("7. Sair");
         System.out.print("Escolha uma opção: ");
     }
 
-    private static int lerOpcao() { //verifica se o numero digitado é valido
+    private static int lerOpcao() {
         while (!scanner.hasNextInt()) {
             System.out.println("Por favor, insira um número válido.");
             scanner.next();
@@ -121,42 +170,52 @@ public class AcademiaApp {
         return scanner.nextInt();
     }
 
-    private static void verificarMensalidade() { //verifica o estado da mensalidade
+    private static void limparBufferScanner() {
+        if (scanner.hasNextLine()) {
+            scanner.nextLine();
+        }
+    }
+
+    private static void verificarMensalidade() {
         if (usuarioLogado.isMensalidadePaga()) {
             System.out.println("Sua mensalidade está paga.");
         } else {
             System.out.println("Sua mensalidade está pendente.");
         }
     }
-    
-  private static void EscolherumProfessor() {
-        Scanner scanner = new Scanner(System.in);
+
+    private static void escolherProfessor() {
+        System.out.print("Digite a data da aula (dd/MM/yyyy): ");
+        limparBufferScanner();
+        String data = scanner.nextLine();
+        data = data.replaceAll(" ","/");
+
         System.out.println("Professores disponíveis:");
-        for (int i = 0; i < Professor.length; i++) {
-            System.out.println((i + 1) + ". " + Professor[i].getNome());
+        for (int i = 0; i < professores.length; i++) {
+            System.out.println((i + 1) + ". " + professores[i].getNome());
         }
         System.out.print("Escolha o número do professor: ");
         int escolha = scanner.nextInt();
 
-        if (escolha > 0 && escolha <= Professor.length) {
-            Professor professorEscolhido = (Professor) Professor[escolha - 1];
+        if (escolha > 0 && escolha <= professores.length) {
+            Professor professorEscolhido = professores[escolha - 1];
             Treino treinoAleatorio = professorEscolhido.fornecerTreinoAleatorio();
             System.out.println("Treino fornecido por " + professorEscolhido.getNome() + ": " + treinoAleatorio.getDescricao());
+            System.out.println("Aula agendada para " + data + " com o professor " + professorEscolhido.getNome() + " sucesso!");
         } else {
             System.out.println("Escolha inválida.");
         }
     }
-    
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    private static void solicitarTreinoAleatorio() { //solciita um treino aleatorio
-        Professor professor = bancoDeDados.getProfessor();
+
+    private static void solicitarTreinoAleatorio() {
+        Professor professor = professores[new Random().nextInt(professores.length)];
         Treino treino = professor.fornecerTreinoAleatorio();
         System.out.println("Seu treino aleatório é: " + treino.getDescricao());
     }
 
-    private static void atualizarPerfil() { //altera o usario e senha
+    private static void atualizarPerfil() {
         System.out.print("Digite seu novo nome de usuário: ");
-        scanner.nextLine(); // Limpa o buffer do scanner
+        limparBufferScanner();
         String novoNome = scanner.nextLine();
         System.out.print("Digite sua nova senha: ");
         String novaSenha = scanner.nextLine();
@@ -166,29 +225,19 @@ public class AcademiaApp {
         System.out.println("Perfil atualizado com sucesso!");
     }
 
-    private static void agendarAula() { 
-        System.out.print("Digite a data da aula (dd/MM/yyyy): ");
-        scanner.nextLine(); // Limpa o buffer do scanner
-        String data = scanner.nextLine();
-
-        // Simulando o agendamento
-        System.out.println("Aula agendada para " + data + " com sucesso!");
-    }
-
     private static void visualizarHistoricoDeTreinos() {
-        // Simulando o histórico de treinos
         System.out.println("Histórico de Treinos:");
         System.out.println("1. Treino de força - 01/07/2024");
         System.out.println("2. Treino de resistência - 05/07/2024");
         System.out.println("3. Treino cardiovascular - 10/07/2024");
+        System.out.println("Histórico de treinos visualizado com sucesso!");
     }
 
     private static void enviarFeedback() {
         System.out.print("Digite seu feedback: ");
-        scanner.nextLine(); 
+        limparBufferScanner();
         String feedback = scanner.nextLine();
 
-        // Simulando o envio de feedback
         System.out.println("Obrigado pelo seu feedback: " + feedback);
     }
 }
