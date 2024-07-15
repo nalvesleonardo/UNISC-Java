@@ -10,12 +10,6 @@ public class BancoDeDadosSimulado {
         usuarios.put("madu", new Aluno("Maria Eduarda", "1234", "mariaeduarda2024@gmail.com", "51998540392", true));
         usuarios.put("carlos", new Aluno("Carlos Arenques", "1234", "carlosarenques@gmail.com", "51997548327", false));
 
-        Treino[] treinos = {
-            new Treino("Treino de força"),
-            new Treino("Treino de resistência"),
-            new Treino("Treino cardiovascular")
-        };
-        professor = new Professor("Professor Eduardo", treinos);
     }
 
     public Usuario getUsuario(String nome) {
