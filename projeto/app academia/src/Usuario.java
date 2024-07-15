@@ -1,4 +1,5 @@
-public class Usuario {
+// classe pai de Aluno e Professor > Encapsulamento e herança
+abstract class Usuario {
     private String nome;
     private String senha;
     private String email;
@@ -52,4 +53,6 @@ public class Usuario {
     public void setMensalidadePaga(boolean mensalidadePaga) {
         this.mensalidadePaga = mensalidadePaga;
     }
+
+    public abstract void mostrarMenu();
 }

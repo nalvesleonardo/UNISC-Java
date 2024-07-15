@@ -5,10 +5,10 @@ public class BancoDeDadosSimulado {
     private Map<String, Usuario> usuarios;
     private Professor professor;
 
-    public BancoDeDadosSimulado() { //usarios pre prontos
+    public BancoDeDadosSimulado() { //usuarios pre prontos
         usuarios = new HashMap<>();
-        usuarios.put("madu2024", new Usuario("Maria Eduarda", "1234", "mariaeduarda2024@gmail.com", "51998540392", true));
-        usuarios.put("carlos2024", new Usuario("Carlos Arenques", "1234", "carlosarenques@gmail.com", "51997548327", false));
+        usuarios.put("madu", new Aluno("Maria Eduarda", "1234", "mariaeduarda2024@gmail.com", "51998540392", true));
+        usuarios.put("carlos", new Aluno("Carlos Arenques", "1234", "carlosarenques@gmail.com", "51997548327", false));
 
         Treino[] treinos = {
             new Treino("Treino de força"),
